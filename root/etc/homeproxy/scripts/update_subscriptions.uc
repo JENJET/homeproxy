@@ -238,11 +238,10 @@ function parse_mihomo_proxy(proxy) {
 	let config;
 	const tls_sni = proxy.servername || proxy.sni;
 	const tls_fingerprint = proxy['client-fingerprint'] || proxy.fingerprint;
-
+	//log(sprintf('parse_mihomo_proxy type:%s,name:%s,server:%s', proxy.type, proxy.name, proxy.server || ''));
 	switch (proxy.type) {
 	case 'anytls': {
-		let anytls_fp = (proxy['client-fingerprint'] !== null && proxy['client-fingerprint'] !== undefined) ?
-			proxy['client-fingerprint'] : proxy.fingerprint;
+		let anytls_fp = (proxy['client-fingerprint'] !== null) ? proxy['client-fingerprint'] : proxy.fingerprint;
 		anytls_fp = to_string(anytls_fp);
 		if (anytls_fp === 'none' || anytls_fp === 'disable' || anytls_fp === 'disabled')
 			anytls_fp = null;
@@ -909,6 +908,218 @@ function parse_uri(uri) {
 	return config;
 }
 
+/*
+ * 将 Mihomo 风格的 YAML 单行对象转换为标准 JSON 字符串
+ * 输入: "{ name: test, type: tuic, port: 443, alpn: [h3] }"
+ * 输出: "{\"name\":\"test\",\"type\":\"tuic\",\"port\":443,\"alpn\":[\"h3\"]}"
+ * 失败则返回原始字符串
+ */
+function yamlInlineToJson(str) {
+	if (type(str) !== 'string') return str;
+
+	let s = trim(str);
+	// 使用 match 替代 startswith/endswith
+	if (!match(s, /^\{/) || !match(s, /\}$/)) {
+		return str;
+	}
+
+	let content = substr(s, 1, length(s) - 2);
+	let result = '';
+	let i = 0;
+	let len = length(content);
+
+	function skipSpace() {
+		while (i < len && match(substr(content, i, 1), /\s/)) {
+			i++;
+		}
+	}
+
+	// 修复点 1: 正确提取直到特定字符，支持嵌套
+	function extractUntil(stopCharStr) {
+		let start = i;
+		let depth = 0;
+		let inQuote = false;
+		let quoteChar = '';
+
+		while (i < len) {
+			let char = substr(content, i, 1);
+			
+			// 处理引号状态
+			if (!inQuote && (char == '"' || char == "'")) {
+				inQuote = true;
+				quoteChar = char;
+				i++;
+				continue;
+			}
+			if (inQuote) {
+				// 检查转义
+				let prev = (i > 0) ? substr(content, i-1, 1) : "";
+				if (char == quoteChar && prev != '\\') {
+					inQuote = false;
+					quoteChar = '';
+				}
+				i++;
+				continue;
+			}
+
+			// 更新嵌套深度
+			if (char == '{' || char == '[') {
+				depth++;
+			} else if (char == '}' || char == ']') {
+				depth--;
+			}
+
+			//只有在顶层 (depth==0) 且 当前字符是停止符时才停止
+			if (depth == 0 && char == stopCharStr) {
+				break;
+			}
+			i++;
+		}
+		return substr(content, start, i - start);
+	}
+
+	// 辅助函数：清洗数组内部内容 [a, b] -> ["a", "b"]
+	function cleanArrayContent(arrContent) {
+		let arrResult = '';
+		let j = 0;
+		let arrLen = length(arrContent);
+		
+		// 临时复用提取逻辑来分割数组元素
+		// 这里手动写一个简单的分割循环，因为数组内部也可能有嵌套对象（虽然少见）
+		while (j < arrLen) {
+			// 跳过空格
+			while (j < arrLen && match(substr(arrContent, j, 1), /\s/)) j++;
+			if (j >= arrLen) break;
+
+			// 提取单个元素
+			let elStart = j;
+			let elDepth = 0;
+			let elInQuote = false;
+			let elQuoteChar = '';
+			
+			while (j < arrLen) {
+				let c = substr(arrContent, j, 1);
+				if (!elInQuote && (c == '"' || c == "'")) {
+					elInQuote = true; elQuoteChar = c; j++; continue;
+				}
+				if (elInQuote) {
+					if (c == elQuoteChar && (j==0 || substr(arrContent, j-1, 1) != '\\')) {
+						elInQuote = false; elQuoteChar = '';
+					}
+					j++; continue;
+				}
+				if (c == '{' || c == '[') elDepth++;
+				else if (c == '}' || c == ']') elDepth--;
+				
+				if (elDepth == 0 && c == ',') break;
+				j++;
+			}
+			
+			let elRaw = trim(substr(arrContent, elStart, j - elStart));
+			
+			// 格式化元素
+			let elFinal = elRaw;
+			if (length(elRaw) > 0) {
+				let isPrim = match(elRaw, /^(-?\d+(\.\d+)?|true|false|null)$/);
+				let isStruct = (match(elRaw, /^\{/) && match(elRaw, /\}$/)) || 
+				               (match(elRaw, /^\[/) && match(elRaw, /\]$/));
+				let isQuoted = (match(elRaw, /^"/) && match(elRaw, /"$/)) || 
+				               (match(elRaw, /^'/) && match(elRaw, /'$/));
+				
+				if (!isPrim && !isStruct && !isQuoted) {
+					// 裸值加双引号
+					elFinal = '"' + elRaw + '"';
+				} else if (match(elRaw, /^'/) && match(elRaw, /'$/)) {
+					// 单引号转双引号
+					elFinal = '"' + substr(elRaw, 1, length(elRaw)-2) + '"';
+				} else if (match(elRaw, /^\{/)) {
+					// 嵌套对象，递归调用
+					elFinal = yamlInlineToJson(elRaw);
+				}
+			}
+
+			if (length(arrResult) > 0) arrResult += ',';
+			arrResult += elFinal;
+
+			// 吃掉逗号
+			if (j < arrLen && substr(arrContent, j, 1) == ',') j++;
+		}
+		return arrResult;
+	}
+
+	try {
+		while (i < len) {
+			skipSpace();
+			if (i >= len) break;
+
+			// 1. 提取 Key
+			let keyRaw = extractUntil(':');
+			let key = trim(keyRaw);
+			
+			if (i < len && substr(content, i, 1) == ':') {
+				i++;
+			} else {
+				return str; // 格式错误
+			}
+
+			skipSpace();
+			if (i >= len) break;
+
+			// 2. 提取 Value
+			let valRaw = extractUntil(',');
+			let val = trim(valRaw);
+			
+			if (i < len && substr(content, i, 1) == ',') {
+				i++;
+			}
+
+			// 3. 格式化 Key
+			if ((match(key, /^"/) && match(key, /"$/)) || 
+			    (match(key, /^'/) && match(key, /'$/))) {
+				key = substr(key, 1, length(key) - 2);
+			}
+			let finalKey = '"' + key + '"';
+
+			// 4. 格式化 Value
+			let finalVal = val;
+			
+			let isPrimitive = match(val, /^(-?\d+(\.\d+)?|true|false|null)$/);
+			let isObj = match(val, /^\{/) && match(val, /\}$/);
+			let isArr = match(val, /^\[/) && match(val, /\]$/);
+			let isQuotedD = match(val, /^"/) && match(val, /"$/);
+			let isQuotedS = match(val, /^'/) && match(val, /'$/);
+			let isQuoted = isQuotedD || isQuotedS;
+
+			if (!isPrimitive && !isObj && !isArr && !isQuoted) {
+				// 裸字符串
+				finalVal = '"' + val + '"';
+			} else if (isQuotedS) {
+				// 单引号转双引号
+				finalVal = '"' + substr(val, 1, length(val) - 2) + '"';
+			} else if (isArr) {
+				// 修复点 2: 处理数组内部
+				// 去掉 [ ]
+				let arrInner = substr(val, 1, length(val) - 2);
+				let cleanedInner = cleanArrayContent(arrInner);
+				finalVal = '[' + cleanedInner + ']';
+			} else if (isObj) {
+				// 递归处理嵌套对象
+				finalVal = yamlInlineToJson(val);
+			}
+
+			if (length(result) > 0) {
+				result += ',';
+			}
+			result += finalKey + ':' + finalVal;
+		}
+		return '{' + result + '}';
+
+	} catch (e) {
+		log(sprintf('[YAML_CONV] CRITICAL ERROR: %s: %s', e.type, e.message));
+		return str;
+	}
+}
+
 function parse_mihomo_yaml(text) {
 	if (isEmpty(text) || type(text) !== 'string')
 		return null;
@@ -939,6 +1150,14 @@ function parse_mihomo_yaml(text) {
 			obj = json(m[1]);
 		} catch(e) {
 			obj = null;
+			let jsonStr;
+			try {
+				jsonStr = yamlInlineToJson(m[1]);
+				obj = json(jsonStr);
+			} catch(e) {				
+				log(sprintf('Json decode error: %s: %s, data:%s', e.type, e.message, jsonStr));
+				obj = null;
+			}
 		}
 		if (obj) {
 			obj.nodetype = 'mihomo';
