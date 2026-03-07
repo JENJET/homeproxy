@@ -61,7 +61,7 @@ config homeproxy 'dns'
 	option disable_cache_expire '0'
 
 config homeproxy 'subscription'
-	option auto_update '0'
+	option auto_update '1'
 	option allow_insecure '0'
 	option packet_encoding 'xudp'
 	option update_via_proxy '0'
