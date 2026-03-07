@@ -1,4 +1,4 @@
-
+ï»¿
 config homeproxy 'infra'
 	option __warning 'DO NOT EDIT THIS SECTION, OR YOU ARE ON YOUR OWN!'
 	option common_port '22,53,80,143,443,465,587,853,873,993,995,5222,8080,8443,9418'
@@ -67,7 +67,7 @@ config homeproxy 'subscription'
 	option update_via_proxy '0'
 	option auto_update_time '0 */6 * * *'
 	option filter_nodes 'blacklist'
-	list filter_keywords 'ÖØÖÃ|µ½ÆÚ|¹ıÆÚ|Ê£Óà|Ì×²Í'
+	list filter_keywords 'é‡ç½®|åˆ°æœŸ|è¿‡æœŸ|å‰©ä½™|å¥—é¤'
 	list filter_keywords 'Expiration|Remaining'
 
 config homeproxy 'server'
