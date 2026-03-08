@@ -1152,7 +1152,6 @@ function parse_mihomo_yaml(text) {
 			obj = null;
 			let jsonStr;
 			try {
-				log(m[1]);
 				jsonStr = yamlInlineToJson(m[1]);
 				obj = json(jsonStr);
 			} catch(e) {				
