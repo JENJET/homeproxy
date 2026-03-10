@@ -1239,7 +1239,7 @@ function main() {
 		}
 
 		if (count == 0)
-			log(sprintf('No valid node found in %s.', url));
+			log(sprintf('No valid node found in %s,res is %s', url, res));
 		else
 			log(sprintf('Successfully fetched %s nodes of total %s from %s.', count, length(nodes), url));
 	}
