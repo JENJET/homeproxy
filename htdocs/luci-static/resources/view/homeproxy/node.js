@@ -58,7 +58,7 @@ function parseShareLink(uri, features) {
 				password: url.username ? decodeURIComponent(url.username) : null,
 				tls: '1',
 				tls_sni: params.get('sni'),
-				tls_insecure: (params.get('insecure') === '1') ? '1' : '0',
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
 				tls_utls: features.with_utls ? anytls_fp : null
 			};
 
@@ -100,9 +100,9 @@ function parseShareLink(uri, features) {
 				hysteria_down_mbps: params.get('downmbps'),
 				hysteria_up_mbps: params.get('upmbps'),
 				tls: '1',
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
 				tls_sni: params.get('peer'),
-				tls_alpn: params.get('alpn'),
-				tls_insecure: (params.get('insecure') === '1') ? '1' : '0'
+				tls_alpn: params.get('alpn')
 			};
 
 			break;
@@ -127,8 +127,8 @@ function parseShareLink(uri, features) {
 				hysteria_obfs_type: params.get('obfs'),
 				hysteria_obfs_password: params.get('obfs-password'),
 				tls: '1',
-				tls_sni: params.get('sni'),
-				tls_insecure: params.get('insecure') ? '1' : '0'
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
+				tls_sni: params.get('sni')
 			};
 
 			break;
@@ -231,6 +231,7 @@ function parseShareLink(uri, features) {
 				password: decodeURIComponent(url.username),
 				transport: params.get('type') !== 'tcp' ? params.get('type') : null,
 				tls: '1',
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
 				tls_sni: params.get('sni')
 			};
 			switch (params.get('type')) {
@@ -268,6 +269,7 @@ function parseShareLink(uri, features) {
 				tuic_congestion_control: params.get('congestion_control'),
 				tuic_udp_relay_mode: params.get('udp_relay_mode'),
 				tls: '1',
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
 				tls_sni: params.get('sni'),
 				tls_alpn: params.get('alpn') ? decodeURIComponent(params.get('alpn')).split(',') : null
 			};
@@ -295,6 +297,7 @@ function parseShareLink(uri, features) {
 				uuid: url.username,
 				transport: params.get('type') !== 'tcp' ? params.get('type') : null,
 				tls: ['tls', 'xtls', 'reality'].includes(params.get('security')) ? '1' : '0',
+				tls_insecure: (params.get('insecure') === '1' || params.get('allowInsecure') === '1') ? '1' : '0',
 				tls_sni: params.get('sni'),
 				tls_alpn: params.get('alpn') ? decodeURIComponent(params.get('alpn')).split(',') : null,
 				tls_reality: (params.get('security') === 'reality') ? '1' : '0',
