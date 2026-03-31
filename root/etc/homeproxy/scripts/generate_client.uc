@@ -68,8 +68,6 @@ let main_node, main_udp_node, dedicated_udp_node, default_outbound, default_outb
     dns_client_subnet, cache_file_store_rdrc, cache_file_rdrc_timeout, direct_domain_list,
     proxy_domain_list;
 
-const sniff_inbounds = [];
-
 if (routing_mode !== 'custom') {
 	main_node = uci.get(uciconfig, ucimain, 'main_node') || 'nil';
 	main_udp_node = uci.get(uciconfig, ucimain, 'main_udp_node') || 'nil';
@@ -628,7 +626,6 @@ push(config.inbounds, {
 	udp_timeout: strToTime(udp_timeout),
 	set_system_proxy: false
 });
-push(sniff_inbounds, 'mixed-in');
 
 if (match(proxy_mode, /redirect/))
 	push(config.inbounds, {
@@ -638,8 +635,6 @@ if (match(proxy_mode, /redirect/))
 		listen: '::',
 		listen_port: int(redirect_port)
 	});
-if (match(proxy_mode, /redirect/))
-	push(sniff_inbounds, 'redirect-in');
 if (match(proxy_mode, /tproxy/))
 	push(config.inbounds, {
 		type: 'tproxy',
@@ -650,8 +645,6 @@ if (match(proxy_mode, /tproxy/))
 		network: 'udp',
 		udp_timeout: strToTime(udp_timeout)
 	});
-if (match(proxy_mode, /tproxy/))
-	push(sniff_inbounds, 'tproxy-in');
 if (match(proxy_mode, /tun/))
 	push(config.inbounds, {
 		type: 'tun',
@@ -665,8 +658,6 @@ if (match(proxy_mode, /tun/))
 		udp_timeout: strToTime(udp_timeout),
 		stack: tcpip_stack
 	});
-if (match(proxy_mode, /tun/))
-	push(sniff_inbounds, 'tun-in');
 /* Inbound end */
 
 /* Outbound start */
@@ -868,12 +859,6 @@ config.route = {
 	auto_detect_interface: isEmpty(default_interface) ? true : null,
 	default_interface: default_interface
 };
-
-for (let i in sniff_inbounds)
-	push(config.route.rules, {
-		inbound: sniff_inbounds[i],
-		action: 'sniff'
-	});
 
 /* Routing rules */
 if (!isEmpty(main_node)) {

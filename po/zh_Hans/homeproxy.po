@@ -14,7 +14,7 @@ msgstr "%s 日志"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:508
 msgid "%s ms"
-msgstr ""
+msgstr "%s 毫秒"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1809
 msgid "%s nodes removed"
@@ -356,7 +356,7 @@ msgstr "国内域名列表版本"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1695
 msgid "Choose which method node latency tests use."
-msgstr ""
+msgstr "选择节点延迟测试使用的方法。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:653
 msgid "Chromium / Cronet"
@@ -1012,7 +1012,7 @@ msgstr "HTTP"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:976
 msgid "HTTP/3"
-msgstr ""
+msgstr "HTTP/3"
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:332
 msgid ""
@@ -1108,7 +1108,7 @@ msgstr "Hysteria2"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1696
 msgid "ICMP"
-msgstr ""
+msgstr "ICMP"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:854
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1291
@@ -1291,11 +1291,11 @@ msgstr "标签"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:734
 msgid "Latency"
-msgstr ""
+msgstr "延迟"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1694
 msgid "Latency test mode"
-msgstr ""
+msgstr "延迟测试模式"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1085
 #: htdocs/luci-static/resources/view/homeproxy/server.js:392
@@ -2007,7 +2007,7 @@ msgstr "如留空，则使用随机版本。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1698
 msgid "Real Proxy"
-msgstr ""
+msgstr "Real Proxy"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:512
 msgid "Recursive outbound detected!"
@@ -2362,7 +2362,7 @@ msgstr "订阅"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:508
 msgid "Success"
-msgstr ""
+msgstr "成功"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1618
 msgid "Successfully imported %s nodes of total %s."
@@ -2488,7 +2488,7 @@ msgstr "腾讯 公共DNS (DoH)"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:742
 msgid "Test"
-msgstr ""
+msgstr "测试"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:534
 msgid "Test URL"
@@ -2838,7 +2838,7 @@ msgstr "URLTest 节点"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:129
 msgid "URLTest: %s"
-msgstr ""
+msgstr "URLTest: %s"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1032
 #: htdocs/luci-static/resources/view/homeproxy/server.js:346
