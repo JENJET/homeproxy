@@ -254,7 +254,7 @@ msgstr "BBR"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:472
 msgid "Backend execution failed"
-msgstr ""
+msgstr "后端执行失败"
 
 #: htdocs/luci-static/resources/view/homeproxy/status.js:235
 msgid "BaiDu"
@@ -1117,15 +1117,15 @@ msgstr "ICMP"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:474
 msgid "ICMP Failed"
-msgstr ""
+msgstr "ICMP 失败"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:476
 msgid "ICMP Probe unavailable"
-msgstr ""
+msgstr "ICMP 探测不可用"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:478
 msgid "ICMP Timeout"
-msgstr ""
+msgstr "ICMP 超时"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:854
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1291
@@ -1280,11 +1280,11 @@ msgstr "发送心跳包以保持连接存活的时间间隔（单位：秒）。
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:480
 msgid "Invalid node"
-msgstr ""
+msgstr "无效节点"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:482
 msgid "Invalid response"
-msgstr ""
+msgstr "无效响应"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:689
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1166
@@ -1715,7 +1715,7 @@ msgstr "无"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:494
 #: htdocs/luci-static/resources/view/homeproxy/node.js:507
 msgid "Not Tested"
-msgstr ""
+msgstr "未测试"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1003
 #: htdocs/luci-static/resources/view/homeproxy/server.js:294
@@ -1884,7 +1884,7 @@ msgstr "私钥指纹"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:484
 msgid "Probe failed"
-msgstr ""
+msgstr "探测失败"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:607
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1087
@@ -2032,11 +2032,11 @@ msgstr "REALITY 标识符"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1785
 msgid "RP"
-msgstr ""
+msgstr "RP"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:486
 msgid "RPC failed"
-msgstr ""
+msgstr "RPC 失败"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:63
 #: htdocs/luci-static/resources/view/homeproxy/server.js:58
@@ -2531,7 +2531,7 @@ msgstr "测试"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1924
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1928
 msgid "Test Current List"
-msgstr ""
+msgstr "测试当前列表"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:534
 msgid "Test URL"
@@ -2556,11 +2556,11 @@ msgstr "测试容差"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:498
 #: htdocs/luci-static/resources/view/homeproxy/node.js:541
 msgid "Testing"
-msgstr ""
+msgstr "测试中"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1917
 msgid "Testing Current List..."
-msgstr ""
+msgstr "当前列表测试中..."
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:628
 msgid "The ACME CA provider to use."
@@ -2782,7 +2782,7 @@ msgstr "微步 公共DNS (DoH)"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:502
 msgid "Timeout"
-msgstr ""
+msgstr "超时"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:747
 msgid ""
